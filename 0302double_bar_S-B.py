@@ -3,6 +3,7 @@ import xlrd
 from pylab import *
 import time
 import datetime
+import pandas as pd
 mpl.rcParams['font.sans-serif']=['SimHei']
 mpl.rcParams['axes.unicode_minus']=False
 
@@ -43,7 +44,7 @@ def image_bar(filepath):
     x = np.array(x)
 
     x_min = -0.12
-    x_max = 0.1
+    x_max = 0.12
     print (x_min)
     print (x_max)
     while x_min <= x_max:
@@ -57,15 +58,13 @@ def image_bar(filepath):
     x_len = len(x_list) - 1
     for j in range(x_len):
         num = ((x > x_list[j]) & (x <= x_list[j + 1])).sum()
+        #if x_list[j]>0.11 and x_list[j + 1]<=0.12:
+        print ('AAAA',x_list[j],num)
         x_num.append(num)
     x_num.append(-0)
     print('*****')
     print(x_num)
     print(len(x_num))
-
-
-
-
 
 
 
@@ -76,9 +75,62 @@ def image_bar(filepath):
     # x_list2 = ['-11%~-10%','-10%~-9%', '-9%~-8%', '-8%~-7%', '-7%~-6%','-6%~-5%', '-5%~-4%', '-4%~-3%',
     #            '-3%~-2%', '-2%~-1%','-1%~0%','0%~-1%', '1%~2%', '2%~3%', '3%~4%','4%~5%', '5%~6%', '6%~7%',
     #            '7%~8%', '8%~9%', '9%~10%']
+
+    ########区间段生成excel
+    z_min = -0.08
+    z_max = 0.25
+    # z_min = x.min()
+    # z_max = x.max()
+    print ('aaaaaaaaaaa',z_min)
+    print ('bbbbbbbbbb',z_max)
+    z_list = []
+    z_num_per = []
+
+    while z_min <= z_max:
+        z_list.append(z_min)
+        z_min = z_min + 0.01
+
+    '''额外增加比例个数生成excel文件 start
+    z_num = []
+    z_len = len(z_list) - 1
+    for p in range(z_len):
+        num = ((x > z_list[p]) & (x <= z_list[p + 1])).sum()
+        z_num.append(num)
+        z_num_per.append('{:%}'.format((z_list[p]))+'~~~~'+'{:%}'.format((z_list[p+1])))
+        if num>2:
+            print ('序号',p)
+    #z_num.append(-0)
+    print ('*****************************************start')
+    print(z_min)
+    print(z_max)
+    #print(z_list[33])
+
+    print(len(z_list))
+    print(z_num)
+    #print (z_num[415:])
+    print(len(z_num))
+    #print(z_num_per[33])
+
+    print(len(z_num_per))
+
+    df_writer = pd.DataFrame()
+    df_tmp = pd.DataFrame(np.array(z_num_per).T,np.array(z_num).T)
+    print (df_tmp)
+    #df_tmp2 = pd.DataFrame(np.array(z_num[415:]).T)
+    #df_tmp.columns = ['百分比','占比数']
+    df_writer = df_writer.append(df_tmp)
+    #df_writer = df_writer.append(df_tmp2, ignore_index=True)
+    today = time.strftime('%Y-%m-%d%H%M%S', time.localtime(time.time()))
+    writer = pd.ExcelWriter('../output/占比{}.xlsx'.format(today))
+    df_writer.to_excel(writer, 'Sheet1')
+    writer.save()
+    print('*****************************************end')
+    额外增加比例个数生成excel文件 end'''
+
+
     x_list2 = ['-12%~-11%','-11%~-10%', '-10%~-9%', '-9%~-8%', '-8%~-7%', '-7%~-6%', '-6%~-5%', '-5%~-4%', '-4%~-3%',
                '-3%~-2%', '-2%~-1%', '-1%~0%', '0%~1%', '1%~2%', '2%~3%', '3%~4%', '4%~5%', '5%~6%', '6%~7%',
-               '7%~8%', '8%~9%', '9%~10%','10%~max']
+               '7%~8%', '8%~9%', '9%~10%','10%~11%','11%~12%','12%~MAX']
     print(len(x_list2))
     print ('&&&&&&&&&')
 
@@ -221,6 +273,6 @@ def get_time_per(filepath):
 
 
 
-filepath = '../output/0302S-B.xlsx'
+filepath = '../output/0306B-S.xlsx'
 #image_bar(filepath)
 get_time_per(filepath)
